@@ -6,17 +6,18 @@
     <title>Asesmen SMPN 3 Watukumpul</title>
     <style>
         :root { --primary: #004080; --bg: #f4f7f6; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: var(--bg); }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: var(--bg); overflow: hidden; }
         .container { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; text-align: center; }
         .card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 90%; max-width: 450px; }
         img.logo { width: 140px; margin-bottom: 15px; }
-        h2 { font-size: 1.2rem; color: #333; margin-bottom: 25px; line-height: 1.5; }
+        h2 { font-size: 1.1rem; color: #333; margin-bottom: 25px; line-height: 1.5; }
         input, select, button { width: 100%; padding: 14px; margin: 10px 0; border: 1.5px solid #ddd; border-radius: 8px; font-size: 1rem; }
         button { background: var(--primary); color: white; border: none; cursor: pointer; font-weight: bold; transition: 0.3s; }
         button:hover { background: #002d5a; }
         .hidden { display: none; }
         #timer { position: fixed; top: 15px; right: 15px; background: #e74c3c; color: white; padding: 10px 20px; border-radius: 50px; font-weight: bold; z-index: 1000; }
         iframe { width: 100%; height: 92vh; border: none; }
+        .warning-text { color: #c0392b; font-size: 0.85rem; margin-top: 10px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -39,6 +40,7 @@
             <p>Silahkan masukkan token dari pengawas</p>
             <input type="text" id="token-input" placeholder="TOKEN">
             <button onclick="startExam()">MULAI UJIAN SEKARANG</button>
+            <p class="warning-text">⚠️ Dilarang keluar aplikasi setelah ujian dimulai atau ujian akan otomatis berakhir!</p>
         </div>
     </div>
 
@@ -48,23 +50,22 @@
         <div style="background: var(--primary); color: white; padding: 12px; font-size: 0.9rem;">
             <b>SPENTIWA EXAM SYSTEM</b> | <span id="display-nama"></span>
         </div>
-        <iframe id="exam-frame"></iframe>
+        <div id="frame-container">
+            <iframe id="exam-frame"></iframe>
+        </div>
     </div>
 
     <script>
-        // Data config yang sudah diisi otomatis berdasarkan file DATA PESERTA 2026.xlsx
+        // Data config siswa
         let config = {
             mapel: "UJI COBA",
-            token: "SPENTIWA26", // Silahkan ganti token sesuai keinginan
-            waktu: 1, // dalam menit
-            link: "https://forms.gle/tz3x2h8uc7B3vEEx6", // Ganti dengan link Google Form Anda
+            token: "SPENTIWA26",
+            waktu: 1, // menit
+            link: "https://forms.gle/eiaKSa8oA3Wx1cox7",
             siswa: [{"nama": "AFANUL MUARIFIN", "kelas": "IX A"}, {"nama": "AKBAR SAPUTRA", "kelas": "IX A"}, {"nama": "ANNA RAHMAWATI", "kelas": "IX A"}, {"nama": "APRILIA RIGINA PUTRI", "kelas": "IX A"}, {"nama": "AZKA JULIANTO", "kelas": "IX A"}, {"nama": "BREFIT SAPUTRA", "kelas": "IX A"}, {"nama": "BUNGA FITRIANI", "kelas": "IX A"}, {"nama": "DEA BANATUL KHOERIYAH", "kelas": "IX A"}, {"nama": "DIAN DIANA", "kelas": "IX A"}, {"nama": "DIDI KHOSI'IN", "kelas": "IX A"}, {"nama": "EKA NOVIAN", "kelas": "IX A"}, {"nama": "INDRI NURFAIROH", "kelas": "IX A"}, {"nama": "JEFRI ISKANDAR", "kelas": "IX A"}, {"nama": "KANJAT MAOLANA", "kelas": "IX A"}, {"nama": "LAELA RAHMAWATI", "kelas": "IX A"}, {"nama": "MAESAROTUN KHASANAH", "kelas": "IX A"}, {"nama": "MUHAMAD DIKA PRANANDA", "kelas": "IX A"}, {"nama": "MUHAMAD FAHRI", "kelas": "IX A"}, {"nama": "MUHAMAD YANUAR ARSADANI", "kelas": "IX A"}, {"nama": "NAFA RAHMAWATI", "kelas": "IX A"}, {"nama": "NAZIL MUKHSININ", "kelas": "IX A"}, {"nama": "RAFA ALWY BAKHTIAR", "kelas": "IX A"}, {"nama": "RESTU ALFARO", "kelas": "IX A"}, {"nama": "RESTU GALIH STIAWAN", "kelas": "IX A"}, {"nama": "SANTI SULISTYAWATI", "kelas": "IX A"}, {"nama": "SELVIA YULIANA SARI", "kelas": "IX A"}, {"nama": "TIARA NOVITA", "kelas": "IX A"}, {"nama": "YENI ARYANTI", "kelas": "IX A"}, {"nama": "ADIT BAYU SETIAWAN", "kelas": "IX B"}, {"nama": "AKSANIA FITRI WULANDARI", "kelas": "IX B"}, {"nama": "ANEZKA NAYSA AQILA", "kelas": "IX B"}, {"nama": "ASIHATUL AFIDAH", "kelas": "IX B"}, {"nama": "BENING IQNA ASFIA", "kelas": "IX B"}, {"nama": "DEFI ANANTA", "kelas": "IX B"}, {"nama": "DONI SAPUTRA", "kelas": "IX B"}, {"nama": "ENJI ERIKA", "kelas": "IX B"}, {"nama": "FAHRUR ROZI", "kelas": "IX B"}, {"nama": "FARHAN MAULANA ILHAM", "kelas": "IX B"}, {"nama": "FARIZ QIA MAULANA", "kelas": "IX B"}, {"nama": "FEBRIYANI ULFAH", "kelas": "IX B"}, {"nama": "FITRI FAUZIAH", "kelas": "IX B"}, {"nama": "HANIFATUL KHASANAH", "kelas": "IX B"}, {"nama": "HELMI FAISAL PRASTIAWAN", "kelas": "IX B"}, {"nama": "IBNU ARIFKI", "kelas": "IX B"}, {"nama": "ILHAM MANGSUR SAPUTRA", "kelas": "IX B"}, {"nama": "ITALITA INDAH OKTAVIA", "kelas": "IX B"}, {"nama": "JAMILATUN NISA", "kelas": "IX B"}, {"nama": "JOVAN FAHREZA ALFARIZI", "kelas": "IX B"}, {"nama": "MARATU NIKMAH", "kelas": "IX B"}, {"nama": "MUHAMAD AKBAR KAROMI", "kelas": "IX B"}, {"nama": "MUHAMAD BINTANG SAPUTRA", "kelas": "IX B"}, {"nama": "MUHAMMAD ADNAN ARIA", "kelas": "IX B"}, {"nama": "NUR SALSABILA", "kelas": "IX B"}, {"nama": "THANIA NOFITA DAMAYANTI", "kelas": "IX B"}, {"nama": "VANIA LAELATUN NIZAR", "kelas": "IX B"}, {"nama": "YOANITA LARASATI", "kelas": "IX B"}, {"nama": "ABDUL RAFA", "kelas": "IX C"}, {"nama": "ALYA SHIVA", "kelas": "IX C"}, {"nama": "ANGGIE ANGGRAENI SAPUTRI", "kelas": "IX C"}, {"nama": "DECA VIO ANETA", "kelas": "IX C"}, {"nama": "DENO YOGA FIRMANSYAH", "kelas": "IX C"}, {"nama": "ERNI LESTARI", "kelas": "IX C"}, {"nama": "FIFI NUR HIDAYAH", "kelas": "IX C"}, {"nama": "FINDA HIKMA GUNA", "kelas": "IX C"}, {"nama": "JALU PANGGIH SETIABUDI", "kelas": "IX C"}, {"nama": "LAELATUL RIZKIYAH", "kelas": "IX C"}, {"nama": "LINDA SETIANINGSIH", "kelas": "IX C"}, {"nama": "MAHBU ALWAN", "kelas": "IX C"}, {"nama": "MEISYA NURAENI", "kelas": "IX C"}, {"nama": "MEYLINDA REFANI", "kelas": "IX C"}, {"nama": "MIFTAKHUL KHOERUL ANAM", "kelas": "IX C"}, {"nama": "NUR HALIMAH HOLIFATUNNISA", "kelas": "IX C"}, {"nama": "RELIYA", "kelas": "IX C"}, {"nama": "REZA MAULANA MALIK", "kelas": "IX C"}, {"nama": "SELVIA AYU WULANDARI", "kelas": "IX C"}, {"nama": "STANLEY QOLBY NOOR", "kelas": "IX C"}, {"nama": "SURURI MUSYAFA", "kelas": "IX C"}, {"nama": "SYAFA MAE AZKIA", "kelas": "IX C"}, {"nama": "TARMONO", "kelas": "IX C"}, {"nama": "VANESYA PUTRI", "kelas": "IX C"}, {"nama": "ZAHROTUNISA", "kelas": "IX C"}, {"nama": "ZIDAN ARIF FADHILLAH", "kelas": "IX C"}, {"nama": "ABBY ALFATAH", "kelas": "IX D"}, {"nama": "ABDUL AZIZ SETIAWAN", "kelas": "IX D"}, {"nama": "ADELYA ZUHROTUN NAFISA", "kelas": "IX D"}, {"nama": "AENA KHAKIM", "kelas": "IX D"}, {"nama": "ALMISA PUTRA", "kelas": "IX D"}, {"nama": "ATIFA ROFIKA HANA", "kelas": "IX D"}, {"nama": "FANAISA ZAHIRA", "kelas": "IX D"}, {"nama": "FIA SAFITRI", "kelas": "IX D"}, {"nama": "FIATUN NINGSIH", "kelas": "IX D"}, {"nama": "HELSI MAOLANA", "kelas": "IX D"}, {"nama": "HIMATUROHMAH", "kelas": "IX D"}, {"nama": "IKFI SABILA KHOERIYAH", "kelas": "IX D"}, {"nama": "IKFINA ROCHMATIN", "kelas": "IX D"}, {"nama": "INA SELVIANA", "kelas": "IX D"}, {"nama": "KODIMAN", "kelas": "IX D"}, {"nama": "MAESAROH", "kelas": "IX D"}, {"nama": "MUHAMAD BAYU LAELATUL FIKRI", "kelas": "IX D"}, {"nama": "MUHAMAD DAVAN ZAKARIA", "kelas": "IX D"}, {"nama": "MUHAMAD IRFAN", "kelas": "IX D"}, {"nama": "NADIYA", "kelas": "IX D"}, {"nama": "NAJWA PUTRI AZZAHRA", "kelas": "IX D"}, {"nama": "NELIN", "kelas": "IX D"}, {"nama": "NUR AENI", "kelas": "IX D"}, {"nama": "NURUL HUMAM", "kelas": "IX D"}, {"nama": "RAFA SAPUTRA", "kelas": "IX D"}, {"nama": "ROBANA MAULANA", "kelas": "IX D"}, {"nama": "TEGUH SATRIO", "kelas": "IX D"}, {"nama": "UNZILA RIZQIKA", "kelas": "IX D"}]
         };
 
-        // Simpan ke localStorage agar sinkron dengan file admin jika ingin digunakan nanti
-        localStorage.setItem('examData', JSON.stringify(config));
-
-        // Load Kelas ke Dropdown
+        // Inisialisasi Kelas
         window.onload = () => {
             const select = document.getElementById('select-kelas');
             const classes = [...new Set(config.siswa.map(s => s.kelas))];
@@ -85,14 +86,16 @@
                 document.getElementById('page-token').classList.remove('hidden');
                 document.getElementById('info-mapel').innerText = config.mapel;
                 window.currentUser = nama;
-            } else { alert("Nama/Kelas tidak ditemukan di database!"); }
+            } else { alert("Nama/Kelas tidak ditemukan!"); }
         }
 
         function startExam() {
             const token = document.getElementById('token-input').value;
             if(token === config.token) {
+                // Aktifkan Fullscreen
                 const doc = document.documentElement;
                 if (doc.requestFullscreen) doc.requestFullscreen();
+                else if (doc.webkitRequestFullscreen) doc.webkitRequestFullscreen();
 
                 document.getElementById('page-token').classList.add('hidden');
                 document.getElementById('page-exam').classList.remove('hidden');
@@ -104,25 +107,65 @@
             } else { alert("Token salah!"); }
         }
 
+        function lockSecurity() {
+            // 1. Cegah Klik Kanan
+            document.addEventListener('contextmenu', e => e.preventDefault());
+
+            // 2. Deteksi Keluar dari Fokus (Pindah Tab/Buka Aplikasi Lain)
+            window.onblur = function() {
+                terminateExam("PELANGGARAN: Anda terdeteksi meninggalkan layar ujian!");
+            };
+
+            // 3. Deteksi Visibility Change (Khusus Mobile)
+            document.addEventListener("visibilitychange", () => {
+                if (document.hidden) {
+                    terminateExam("PELANGGARAN: Aplikasi ujian ditutup/diminimalkan!");
+                }
+            });
+
+            // 4. Cegah Tombol Keyboard (Alt+Tab, Ctrl, dsb)
+            document.onkeydown = function (e) {
+                if (e.ctrlKey || e.metaKey || e.altKey || e.key === "F12") {
+                    e.preventDefault();
+                    return false;
+                }
+            };
+        }
+
+        function terminateExam(msg) {
+            // Hentikan Timer
+            if(window.examTimer) clearInterval(window.examTimer);
+            
+            // Hapus Iframe agar soal hilang
+            document.getElementById('frame-container').innerHTML = "";
+            
+            // Tampilkan Pesan Berakhir
+            alert(msg);
+            document.getElementById('page-exam').innerHTML = `
+                <div class="container">
+                    <div class="card">
+                        <h2 style="color:red;">UJIAN DIHENTIKAN</h2>
+                        <p>${msg}</p>
+                        <p>Silahkan hubungi pengawas untuk reset ujian.</p>
+                        <button onclick="location.reload()">KEMBALI KE LOGIN</button>
+                    </div>
+                </div>`;
+            
+            // Keluar Fullscreen
+            if (document.exitFullscreen) document.exitFullscreen();
+        }
+
         function runTimer(sec) {
             const display = document.getElementById('time-left');
-            const timer = setInterval(() => {
+            window.examTimer = setInterval(() => {
                 let min = Math.floor(sec / 60);
                 let s = sec % 60;
                 display.innerText = `${min}:${s < 10 ? '0'+s : s}`;
                 if (sec-- <= 0) {
-                    clearInterval(timer);
-                    alert("Waktu Habis!");
-                    location.reload();
+                    clearInterval(window.examTimer);
+                    terminateExam("Waktu ujian telah habis!");
                 }
             }, 1000);
-        }
-
-        function lockSecurity() {
-            document.addEventListener("visibilitychange", () => {
-                if (document.hidden) alert("Peringatan! Jangan keluar dari aplikasi ujian.");
-            });
-            document.addEventListener('contextmenu', e => e.preventDefault());
         }
     </script>
 </body>
