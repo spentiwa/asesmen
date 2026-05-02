@@ -2,11 +2,11 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>ADMIN ASESMEN - SPENTIWA</title>
+    <title>Admin Panel - SPENTIWA</title>
     <style>
         body { font-family: sans-serif; background: #2c3e50; color: white; padding: 20px; }
         .card { background: white; color: #333; padding: 25px; border-radius: 12px; max-width: 600px; margin: auto; }
-        input, textarea, button { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;}
+        input, button { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;}
         button { background: #27ae60; color: white; border: none; cursor: pointer; font-weight: bold; }
         .hidden { display: none; }
     </style>
@@ -24,14 +24,20 @@
     <!-- KONTROL ADMIN -->
     <div id="admin-panel" class="card hidden">
         <h2>PENGATURAN ASESMEN</h2>
+        <p style="font-size: 0.9rem; color: #666;">*Data siswa dikelola melalui file utama.</p>
+        
         <label>Mata Pelajaran:</label>
         <input type="text" id="m">
+        
         <label>Token Ujian:</label>
         <input type="text" id="t">
+        
         <label>Durasi (Menit):</label>
         <input type="number" id="w">
+        
         <label>Link Google Form:</label>
         <input type="text" id="l">
+        
         <button onclick="save()">SIMPAN & UPDATE UJIAN</button>
         <button style="background: #c0392b; margin-top: 10px;" onclick="location.reload()">LOGOUT</button>
     </div>
@@ -50,31 +56,27 @@
         function loadCurrent() {
             const data = JSON.parse(localStorage.getItem('examData'));
             if(data) {
-                document.getElementById('m').value = data.mapel;
-                document.getElementById('t').value = data.token;
-                document.getElementById('w').value = data.waktu;
-                document.getElementById('l').value = data.link;
-                document.getElementById('s').value = data.siswa.map(x => `${x.nama},${x.kelas}`).join('\n');
+                document.getElementById('m').value = data.mapel || "";
+                document.getElementById('t').value = data.token || "";
+                document.getElementById('w').value = data.waktu || "";
+                document.getElementById('l').value = data.link || "";
             }
         }
 
         function save() {
-            const rawSiswa = document.getElementById('s').value.split('\n');
-            const listSiswa = rawSiswa.filter(line => line.includes(',')).map(line => {
-                const parts = line.split(',');
-                return { nama: parts[0].trim(), kelas: parts[1].trim() };
-            });
+            // Mengambil data lama agar daftar siswa tidak hilang saat menekan simpan
+            const oldData = JSON.parse(localStorage.getItem('examData')) || { siswa: [] };
 
             const data = {
                 mapel: document.getElementById('m').value,
                 token: document.getElementById('t').value,
                 waktu: document.getElementById('w').value,
                 link: document.getElementById('l').value,
-                siswa: listSiswa
+                siswa: oldData.siswa // Tetap mempertahankan data siswa yang sudah ada
             };
 
             localStorage.setItem('examData', JSON.stringify(data));
-            alert("Data berhasil diupdate ke sistem siswa!");
+            alert("Pengaturan ujian berhasil diperbarui!");
         }
     </script>
 </body>
