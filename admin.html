@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel - SPENTIWA</title>
+    <style>
+        body { font-family: sans-serif; background: #2c3e50; color: white; padding: 20px; }
+        .card { background: white; color: #333; padding: 25px; border-radius: 12px; max-width: 600px; margin: auto; }
+        input, textarea, button { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;}
+        button { background: #27ae60; color: white; border: none; cursor: pointer; font-weight: bold; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <!-- LOGIN ADMIN -->
+    <div id="login-box" class="card">
+        <h2 style="text-align: center;">LOGIN ADMIN SPENTIWA</h2>
+        <input type="text" id="user" placeholder="Username">
+        <input type="password" id="pass" placeholder="Password">
+        <button onclick="auth()">MASUK PANEL</button>
+    </div>
+
+    <!-- KONTROL ADMIN -->
+    <div id="admin-panel" class="card hidden">
+        <h2>PENGATURAN ASESMEN</h2>
+        <label>Mata Pelajaran:</label>
+        <input type="text" id="m">
+        <label>Token Ujian:</label>
+        <input type="text" id="t">
+        <label>Durasi (Menit):</label>
+        <input type="number" id="w">
+        <label>Link Google Form:</label>
+        <input type="text" id="l">
+        <label>Data Siswa (Format: Nama,Kelas - Satu per baris):</label>
+        <textarea id="s" rows="8" placeholder="Contoh:&#10;Ahmad Fauzi,7A&#10;Siti Aminah,7B"></textarea>
+        <button onclick="save()">SIMPAN & UPDATE UJIAN</button>
+        <button style="background: #c0392b; margin-top: 10px;" onclick="location.reload()">LOGOUT</button>
+    </div>
+
+    <script>
+        function auth() {
+            const u = document.getElementById('user').value;
+            const p = document.getElementById('pass').value;
+            if(u === "ADMIN" && p === "SPENTIWA") {
+                document.getElementById('login-box').classList.add('hidden');
+                document.getElementById('admin-panel').classList.remove('hidden');
+                loadCurrent();
+            } else { alert("User/Password Salah!"); }
+        }
+
+        function loadCurrent() {
+            const data = JSON.parse(localStorage.getItem('examData'));
+            if(data) {
+                document.getElementById('m').value = data.mapel;
+                document.getElementById('t').value = data.token;
+                document.getElementById('w').value = data.waktu;
+                document.getElementById('l').value = data.link;
+                document.getElementById('s').value = data.siswa.map(x => `${x.nama},${x.kelas}`).join('\n');
+            }
+        }
+
+        function save() {
+            const rawSiswa = document.getElementById('s').value.split('\n');
+            const listSiswa = rawSiswa.filter(line => line.includes(',')).map(line => {
+                const parts = line.split(',');
+                return { nama: parts[0].trim(), kelas: parts[1].trim() };
+            });
+
+            const data = {
+                mapel: document.getElementById('m').value,
+                token: document.getElementById('t').value,
+                waktu: document.getElementById('w').value,
+                link: document.getElementById('l').value,
+                siswa: listSiswa
+            };
+
+            localStorage.setItem('examData', JSON.stringify(data));
+            alert("Data berhasil diupdate ke sistem siswa!");
+        }
+    </script>
+</body>
+</html>
