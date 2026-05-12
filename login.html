@@ -22,7 +22,6 @@
 </head>
 <body>
 
-    <!-- LOGIN PESERTA -->
     <div id="page-login" class="container">
         <div class="card">
             <img src="logo_smpn3.png" class="logo" alt="Logo SPENTIWA">
@@ -33,7 +32,6 @@
         </div>
     </div>
 
-    <!-- VERIFIKASI TOKEN -->
     <div id="page-token" class="container hidden">
         <div class="card">
             <h3 id="info-mapel">Mata Pelajaran</h3>
@@ -41,11 +39,10 @@
             <input type="text" id="token-input" placeholder="TOKEN">
             <button onclick="startExam()">MULAI UJIAN SEKARANG</button>
             <p id="jadwal-info" style="font-weight: bold; color: var(--primary);"></p>
-            <p class="warning-text">⚠️ Dilarang keluar aplikasi atau berpindah tab setelah ujian dimulai!</p>
+            <p class="warning-text">⚠️ Peringatan: Jika keluar aplikasi, pindah tab, atau refresh halaman, semua jawaban akan HILANG!</p>
         </div>
     </div>
 
-    <!-- LAMAN UJIAN -->
     <div id="page-exam" class="hidden">
         <div id="timer">Sisa Waktu: <span id="time-left">00:00:00</span></div>
         <div style="background: var(--primary); color: white; padding: 12px; font-size: 0.9rem;">
@@ -57,14 +54,13 @@
     </div>
 
     <script>
-        // Data config utama
         let config = {
-            mapel: "IPS",
-            token: "LLSSDG",
-            waktuMulai: "07:30:00",
-            waktuSelesai: "09:30:00",
-            link: "https://forms.gle/bQhLjkRS5tJYvL2E8",
-            siswa: [{"nama": "AFANUL MUARIFIN", "kelas": "IX A"}, {"nama": "AKBAR SAPUTRA", "kelas": "IX A"}, {"nama": "ANNA RAHMAWATI", "kelas": "IX A"}, {"nama": "APRILIA RIGINA PUTRI", "kelas": "IX A"}, {"nama": "AZKA JULIANTO", "kelas": "IX A"}, {"nama": "BREFIT SAPUTRA", "kelas": "IX A"}, {"nama": "BUNGA FITRIANI", "kelas": "IX A"}, {"nama": "DEA BANATUL KHOERIYAH", "kelas": "IX A"}, {"nama": "DIAN DIANA", "kelas": "IX A"}, {"nama": "DIDI KHOSI'IN", "kelas": "IX A"}, {"nama": "EKA NOVIAN", "kelas": "IX A"}, {"nama": "INDRI NURFAIROH", "kelas": "IX A"}, {"nama": "JEFRI ISKANDAR", "kelas": "IX A"}, {"nama": "KANJAT MAOLANA", "kelas": "IX A"}, {"nama": "LAELA RAHMAWATI", "kelas": "IX A"}, {"nama": "MAESAROTUN KHASANAH", "kelas": "IX A"}, {"nama": "MUHAMAD DIKA PRANANDA", "kelas": "IX A"}, {"nama": "MUHAMAD FAHRI", "kelas": "IX A"}, {"nama": "MUHAMAD YANUAR ARSADANI", "kelas": "IX A"}, {"nama": "NAFA RAHMAWATI", "kelas": "IX A"}, {"nama": "NAZIL MUKHSININ", "kelas": "IX A"}, {"nama": "RAFA ALWY BAKHTIAR", "kelas": "IX A"}, {"nama": "RESTU ALFARO", "kelas": "IX A"}, {"nama": "RESTU GALIH STIAWAN", "kelas": "IX A"}, {"nama": "SANTI SULISTYAWATI", "kelas": "IX A"}, {"nama": "SELVIA YULIANA SARI", "kelas": "IX A"}, {"nama": "TIARA NOVITA", "kelas": "IX A"}, {"nama": "YENI ARYANTI", "kelas": "IX A"}, {"nama": "ADIT BAYU SETIAWAN", "kelas": "IX B"}, {"nama": "AKSANIA FITRI WULANDARI", "kelas": "IX B"}, {"nama": "ANEZKA NAYSA AQILA", "kelas": "IX B"}, {"nama": "ASIHATUL AFIDAH", "kelas": "IX B"}, {"nama": "BENING IQNA ASFIA", "kelas": "IX B"}, {"nama": "DEFI ANANTA", "kelas": "IX B"}, {"nama": "DONI SAPUTRA", "kelas": "IX B"}, {"nama": "ENJI ERIKA", "kelas": "IX B"}, {"nama": "FAHRUR ROZI", "kelas": "IX B"}, {"nama": "FARHAN MAULANA ILHAM", "kelas": "IX B"}, {"nama": "FARIZ QIA MAULANA", "kelas": "IX B"}, {"nama": "FEBRIYANI ULFAH", "kelas": "IX B"}, {"nama": "FITRI FAUZIAH", "kelas": "IX B"}, {"nama": "HANIFATUL KHASANAH", "kelas": "IX B"}, {"nama": "HELMI FAISAL PRASTIAWAN", "kelas": "IX B"}, {"nama": "IBNU ARIFKI", "kelas": "IX B"}, {"nama": "ILHAM MANGSUR SAPUTRA", "kelas": "IX B"}, {"nama": "ITALITA INDAH OKTAVIA", "kelas": "IX B"}, {"nama": "JAMILATUN NISA", "kelas": "IX B"}, {"nama": "JOVAN FAHREZA ALFARIZI", "kelas": "IX B"}, {"nama": "MARATU NIKMAH", "kelas": "IX B"}, {"nama": "MUHAMAD AKBAR KAROMI", "kelas": "IX B"}, {"nama": "MUHAMAD BINTANG SAPUTRA", "kelas": "IX B"}, {"nama": "MUHAMMAD ADNAN ARIA", "kelas": "IX B"}, {"nama": "NUR SALSABILA", "kelas": "IX B"}, {"nama": "THANIA NOFITA DAMAYANTI", "kelas": "IX B"}, {"nama": "VANIA LAELATUN NIZAR", "kelas": "IX B"}, {"nama": "YOANITA LARASATI", "kelas": "IX B"}, {"nama": "ABDUL RAFA", "kelas": "IX C"}, {"nama": "ALYA SHIVA", "kelas": "IX C"}, {"nama": "ANGGIE ANGGRAENI SAPUTRI", "kelas": "IX C"}, {"nama": "DECA VIO ANETA", "kelas": "IX C"}, {"nama": "DENO YOGA FIRMANSYAH", "kelas": "IX C"}, {"nama": "ERNI LESTARI", "kelas": "IX C"}, {"nama": "FIFI NUR HIDAYAH", "kelas": "IX C"}, {"nama": "FINDA HIKMA GUNA", "kelas": "IX C"}, {"nama": "JALU PANGGIH SETIABUDI", "kelas": "IX C"}, {"nama": "LAELATUL RIZKIYAH", "kelas": "IX C"}, {"nama": "LINDA SETIANINGSIH", "kelas": "IX C"}, {"nama": "MAHBU ALWAN", "kelas": "IX C"}, {"nama": "MEISYA NURAENI", "kelas": "IX C"}, {"nama": "MEYLINDA REFANI", "kelas": "IX C"}, {"nama": "MIFTAKHUL KHOERUL ANAM", "kelas": "IX C"}, {"nama": "NUR HALIMAH HOLIFATUNNISA", "kelas": "IX C"}, {"nama": "RELIYA", "kelas": "IX C"}, {"nama": "REZA MAULANA MALIK", "kelas": "IX C"}, {"nama": "SELVIA AYU WULANDARI", "kelas": "IX C"}, {"nama": "STANLEY QOLBY NOOR", "kelas": "IX C"}, {"nama": "SURURI MUSYAFA", "kelas": "IX C"}, {"nama": "SYAFA MAE AZKIA", "kelas": "IX C"}, {"nama": "TARMONO", "kelas": "IX C"}, {"nama": "VANESYA PUTRI", "kelas": "IX C"}, {"nama": "ZAHROTUNISA", "kelas": "IX C"}, {"nama": "ZIDAN ARIF FADHILLAH", "kelas": "IX C"}, {"nama": "ABBY ALFATAH", "kelas": "IX D"}, {"nama": "ABDUL AZIZ SETIAWAN", "kelas": "IX D"}, {"nama": "ADELYA ZUHROTUN NAFISA", "kelas": "IX D"}, {"nama": "AENA KHAKIM", "kelas": "IX D"}, {"nama": "ALMISA PUTRA", "kelas": "IX D"}, {"nama": "ATIFA ROFIKA HANA", "kelas": "IX D"}, {"nama": "FANAISA ZAHIRA", "kelas": "IX D"}, {"nama": "FIA SAFITRI", "kelas": "IX D"}, {"nama": "FIATUN NINGSIH", "kelas": "IX D"}, {"alt": "HELSI MAOLANA", "nama": "HELSI MAOLANA", "kelas": "IX D"}, {"nama": "HIMATUROHMAH", "kelas": "IX D"}, {"nama": "IKFI SABILA KHOERIYAH", "kelas": "IX D"}, {"nama": "IKFINA ROCHMATIN", "kelas": "IX D"}, {"nama": "INA SELVIANA", "kelas": "IX D"}, {"nama": "KODIMAN", "kelas": "IX D"}, {"nama": "MAESAROH", "kelas": "IX D"}, {"nama": "MUHAMAD BAYU LAELATUL FIKRI", "kelas": "IX D"}, {"nama": "MUHAMAD DAVAN ZAKARIA", "kelas": "IX D"}, {"nama": "MUHAMAD IRFAN", "kelas": "IX D"}, {"nama": "NADIYA", "kelas": "IX D"}, {"nama": "NAJWA PUTRI AZZAHRA", "kelas": "IX D"}, {"nama": "NELIN", "kelas": "IX D"}, {"nama": "NUR AENI", "kelas": "IX D"}, {"nama": "NURUL HUMAM", "kelas": "IX D"}, {"nama": "RAFA SAPUTRA", "kelas": "IX D"}, {"nama": "ROBANA MAULANA", "kelas": "IX D"}, {"nama": "TEGUH SATRIO", "kelas": "IX D"}, {"nama": "UNZILA RIZQIKA", "kelas": "IX D"}]
+            mapel: "INFORMATIKA",
+            token: "VTRIHK",
+            waktuMulai: "10:00:00",
+            waktuSelesai: "11:30:00",
+            link: "https://forms.gle/H8RwDarUJzU29Z5i9",
+            siswa: [{"nama": "AFANUL MUARIFIN", "kelas": "IX A"}, {"nama": "AKBAR SAPUTRA", "kelas": "IX A"}] // Tambahkan sisa data siswa di sini
         };
 
         window.onload = () => {
@@ -94,37 +90,20 @@
         function startExam() {
             const token = document.getElementById('token-input').value;
             const sekarang = new Date();
-            const jamMulai = new Date();
             const jamSelesai = new Date();
-            
-            const [hM, mM, sM] = config.waktuMulai.split(':');
             const [hS, mS, sS] = config.waktuSelesai.split(':');
-            
-            jamMulai.setHours(hM, mM, sM);
             jamSelesai.setHours(hS, mS, sS);
-
-            if (sekarang < jamMulai) {
-                alert("Ujian belum dimulai! Tunggu hingga " + config.waktuMulai);
-                return;
-            }
-            if (sekarang > jamSelesai) {
-                alert("Waktu ujian sudah berakhir!");
-                return;
-            }
 
             if(token === config.token) {
                 const doc = document.documentElement;
                 if (doc.requestFullscreen) doc.requestFullscreen();
-                else if (doc.webkitRequestFullscreen) doc.webkitRequestFullscreen();
-
+                
                 document.getElementById('page-token').classList.add('hidden');
                 document.getElementById('page-exam').classList.remove('hidden');
                 document.getElementById('exam-frame').src = config.link;
                 document.getElementById('display-nama').innerText = window.currentUser + " (" + config.mapel + ")";
 
                 runTimerRealTime(jamSelesai);
-                
-                // Beri jeda 2 detik sebelum mengaktifkan kunci keamanan agar transisi fullscreen stabil
                 setTimeout(lockSecurity, 2000);
             } else { alert("Token salah!"); }
         }
@@ -147,24 +126,24 @@
         }
 
         function lockSecurity() {
-            // Mencegah klik kanan
+            // 1. Mencegah Klik Kanan
             document.addEventListener('contextmenu', e => e.preventDefault());
 
-            // HANYA MENDETEKSI JIKA PINDAH TAB ATAU MINIMIZE
-            // Menggunakan visibilityState jauh lebih akurat daripada onblur untuk Google Form
+            // 2. Deteksi Pindah Tab / Minimize (Pelanggaran)
             document.addEventListener("visibilitychange", () => {
                 if (document.hidden) {
-                    terminateExam("PELANGGARAN: Anda terdeteksi meninggalkan layar ujian!");
+                    terminateExam("PELANGGARAN: Anda terdeteksi meninggalkan layar ujian! Jawaban Anda dibatalkan.");
                 }
             });
 
-            // Mencegah shortcut keyboard (F12, Ctrl+Shift+I, dll)
+            // 3. Mencegah Refresh Halaman (Menampilkan Peringatan)
+            window.onbeforeunload = function() {
+                return "Data ujian Anda akan hilang jika Anda keluar!";
+            };
+
+            // 4. Mencegah Shortcut Keyboard
             document.onkeydown = (e) => {
-                if (
-                    e.key === "F12" || 
-                    (e.ctrlKey && (e.key === "u" || e.key === "U" || e.key === "s" || e.key === "S")) ||
-                    (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J" || e.key === "C"))
-                ) {
+                if (e.key === "F12" || (e.ctrlKey && (e.key === "u" || e.key === "r"))) {
                     e.preventDefault();
                     return false;
                 }
@@ -172,19 +151,33 @@
         }
 
         function terminateExam(msg) {
+            // HENTIKAN TIMER
             if(window.examTimer) clearInterval(window.examTimer);
-            document.getElementById('frame-container').innerHTML = "";
+            
+            // HAPUS IFRAME SECARA PERMANEN (Agar form ter-reset)
+            const frameContainer = document.getElementById('frame-container');
+            if (frameContainer) {
+                frameContainer.innerHTML = ""; // Menghapus konten di dalam frame container
+            }
+
+            // MATIKAN PROTEKSI REFRESH (Agar bisa reload ke login)
+            window.onbeforeunload = null;
+
+            // TAMPILKAN PESAN PENALTI
             alert(msg);
             document.getElementById('page-exam').innerHTML = `
                 <div class="container">
                     <div class="card">
-                        <h2 style="color:red;">UJIAN BERAKHIR</h2>
+                        <h2 style="color:red;">UJIAN DIBATALKAN</h2>
                         <p>${msg}</p>
-                        <p>Jika ini adalah kesalahan teknis, hubungi pengawas.</p>
+                        <p style="font-weight:bold; color:black;">Semua jawaban yang telah diisi tidak tersimpan.</p>
+                        <hr>
+                        <p>Silahkan lapor ke pengawas untuk mendapatkan izin ujian ulang.</p>
                         <button onclick="location.reload()">KEMBALI KE LOGIN</button>
                     </div>
                 </div>`;
-            if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen();
+            
+            if (document.fullscreenElement) document.exitFullscreen();
         }
     </script>
 </body>
